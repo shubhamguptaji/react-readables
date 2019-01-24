@@ -25,47 +25,48 @@ class Post extends Component {
 
     return (
       <Card>
+        <Row>
+          <Icon small left>
+            account_circle
+          </Icon>
+          <strong>{author}</strong> added a post.
+          <span />
+          <span style={{ float: "right" }}>
+            <Dropdown
+              trigger={
+                <a>
+                  <Icon className="hover" small right>
+                    more_vert
+                  </Icon>
+                </a>
+              }
+            >
+              <div style={{ padding: 8 }}>
+                <Icon tiny left>
+                  edit
+                </Icon>
+                Edit
+              </div>
+              <NavItem divider />
+              <div style={{ padding: 8 }}>
+                <Icon tiny left>
+                  delete
+                </Icon>
+                Delete
+              </div>
+            </Dropdown>
+          </span>
+          <span style={{ float: "right" }}>
+            {Date(timestamp)
+              .toString()
+              .slice(3, 15)}
+          </span>
+        </Row>
+        <Row />
         <Collapsible>
           <CollapsibleItem
             header={
               <div>
-                <Row>
-                  <Icon small left>
-                    account_circle
-                  </Icon>
-                  <strong>{author}</strong> added a post.
-                  <span />
-                  <span style={{ float: "right" }}>
-                    <Dropdown
-                      trigger={
-                        <i>
-                          <Icon className="hover" small right>
-                            more_vert
-                          </Icon>
-                        </i>
-                      }
-                    >
-                      <div style={{ padding: 8 }}>
-                        <Icon tiny left>
-                          edit
-                        </Icon>
-                        Edit
-                      </div>
-                      <NavItem divider />
-                      <div style={{ padding: 8 }}>
-                        <Icon tiny left>
-                          delete
-                        </Icon>
-                        Delete
-                      </div>
-                    </Dropdown>
-                  </span>
-                  <span style={{ float: "right" }}>
-                    {Date(timestamp)
-                      .toString()
-                      .slice(3, 15)}
-                  </span>
-                </Row>
                 <Row>
                   <h5>{title}</h5>
                   {description}

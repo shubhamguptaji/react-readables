@@ -1,12 +1,14 @@
-import { ADD_POST, EDIT_POST, REMOVE_POST } from "../actions";
-import fetchPosts from "./fetchPosts";
+import { ADD_POST, EDIT_POST, REMOVE_POST, FETCH_POSTS } from "../actions";
 import { combineReducers } from "redux";
 import fetchComments from "./fetchComments";
+import fetchCategories from "./fetchCategories";
 import IDGenerator from "../helper";
 
 function posts(state = [], action) {
   const { author, title, description, category, id } = action;
   switch (action.type) {
+    case FETCH_POSTS:
+      return [...state, ...action.payload];
     case ADD_POST:
       return [
         ...state,
@@ -16,7 +18,7 @@ function posts(state = [], action) {
           body: description,
           category: category,
           id: IDGenerator(),
-          timestamp: Date(Date.now())
+          timestamp: Date.now()
         }
       ];
     case EDIT_POST:
@@ -28,10 +30,10 @@ function posts(state = [], action) {
         }
       };
     case REMOVE_POST:
-      return state.filter(element => element !== action.id);
+      return [...state, state.filter(id => id !== action.id)];
     default:
       return state;
   }
 }
 
-export default combineReducers({ posts, fetchPosts, fetchComments });
+export default combineReducers({ posts, fetchComments, fetchCategories });

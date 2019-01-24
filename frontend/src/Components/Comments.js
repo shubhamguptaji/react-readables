@@ -11,26 +11,31 @@ class Comments extends Component {
   componentDidMount() {
     this.props.fetchComments(this.props.parentId);
   }
+
   render() {
     return (
       <div>
         <div>
           <ul>
-            {this.props.comment.map(c => (
-              <Row key={c.id}>
-                <span style={{ float: "right" }}>
-                  {Date(c.timestamp)
-                    .toString()
-                    .slice(3, 15)}
-                </span>
-                <Icon left mini>
-                  person_pin
-                </Icon>
-                <strong>{c.author}</strong>
-                {" commented "}
-                <strong>{c.body}</strong>
-              </Row>
-            ))}
+            {this.props.comment.map(c =>
+              c.parentId === this.props.parentId ? (
+                <Row key={c.id}>
+                  <span style={{ float: "right" }}>
+                    {Date(c.timestamp)
+                      .toString()
+                      .slice(3, 15)}
+                  </span>
+                  <Icon left mini>
+                    person_pin
+                  </Icon>
+                  <strong>{c.author}</strong>
+                  {" commented "}
+                  <strong>{c.body}</strong>
+                </Row>
+              ) : (
+                <span />
+              )
+            )}
             <Row style={{ marginTop: 10 }}>
               <Input s={4} label="name" />
               <Input s={6} label="Comment" />

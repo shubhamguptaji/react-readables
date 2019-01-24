@@ -2,15 +2,17 @@ import React, { Component } from "react";
 import Post from "./post";
 import { connect } from "react-redux";
 import { Row, Col, Preloader } from "react-materialize";
-import { fetchPosts } from "../actions/fetchPosts";
+import { posts } from "../actions";
 import { bindActionCreators } from "redux";
 
 class Posts extends Component {
   state = {
-    isLoading: true
+    isLoading: true,
+    post: []
   };
   componentDidMount() {
     this.props.fetchPosts();
+    this.setState({ post: this.props.posts });
     this.setState({ isLoading: false });
   }
   render() {
@@ -50,13 +52,13 @@ class Posts extends Component {
 
 function mapStateToProps(state) {
   return {
-    posts: state.fetchPosts
+    posts: state.posts
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchPosts: bindActionCreators(fetchPosts, dispatch)
+    fetchPosts: bindActionCreators(posts, dispatch)
   };
 }
 

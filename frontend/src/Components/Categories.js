@@ -1,24 +1,18 @@
 import React, { Component } from "react";
 import { Row, Col } from "react-materialize";
 import NavItem from "react-materialize/lib/NavItem";
+import { fetchCategories } from "../actions/fetchCategories";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 class Categories extends Component {
   state = {
-    categories: [],
     isLoding: true
   };
 
   componentDidMount() {
-    fetch("http://localhost:3001/categories", {
-      method: "GET",
-      headers: {
-        Authorization: "Basic" + btoa("1234:1234")
-      }
-    })
-      .then(response => response.json())
-      .then(data =>
-        this.setState({ categories: data.categories, isLoding: false })
-      );
+    this.props.fetchCategories();
+    this.setState({ isLoding: false });
   }
 
   render() {
@@ -37,7 +31,7 @@ class Categories extends Component {
               <NavItem key={"all"} style={{ margin: 10, textAlign: "center" }}>
                 All
               </NavItem>
-              {this.state.categories.map(d => (
+              {this.props.categories.map(d => (
                 <NavItem
                   key={d.name}
                   style={{ margin: 10, textAlign: "center" }}
@@ -53,4 +47,19 @@ class Categories extends Component {
   }
 }
 
-export default Categories;
+function mapStateToProps(state) {
+  return {
+    categories: state.fetchCategories
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    fetchCategories: bindActionCreators(fetchCategories, dispatch)
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Categories);

@@ -9,7 +9,7 @@ const defaultData = {
     parentId: "8xf0y6ziyjabvozdd253nd",
     timestamp: 1468166872634,
     body: 'Hi there! I am a COMMENT.',
-    author: 'thingtwo',
+    author: 'Shubham',
     voteScore: 6,
     deleted: false,
     parentDeleted: false
@@ -19,7 +19,7 @@ const defaultData = {
     parentId: "8xf0y6ziyjabvozdd253nd",
     timestamp: 1469479767190,
     body: 'Comments. Are. Cool.',
-    author: 'thingone',
+    author: 'Gupta_ji',
     voteScore: -5,
     deleted: false,
     parentDeleted: false
