@@ -15,3 +15,12 @@ export const fetchComments = parentId => {
       .then(data => dispatch({ type: FETCH_COMMENTS, payload: data }));
   };
 };
+
+export function AddComment({ author, body, parentId }) {
+  return {
+    type: ADD_COMMENT,
+    author,
+    body,
+    parentId
+  };
+}

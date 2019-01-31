@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Categories from "./Categories";
 import Posts from "./posts";
-import AddPost from "./AddPost";
+import AddPostForm from "./AddPostForm";
 import { Row, Col } from "react-materialize";
 import MediaQuery from "react-responsive";
 
@@ -18,7 +18,7 @@ class FrontPage extends Component {
             </MediaQuery>
           </Col>
           <Col s={12} m={7}>
-            <AddPost />
+            <AddPostForm onSubmit={this.submit} />
             <Posts />
           </Col>
           <Col s={0} m={3} />

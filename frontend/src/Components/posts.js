@@ -7,12 +7,10 @@ import { bindActionCreators } from "redux";
 
 class Posts extends Component {
   state = {
-    isLoading: true,
-    post: []
+    isLoading: true
   };
   componentDidMount() {
     this.props.fetchPosts();
-    this.setState({ post: this.props.posts });
     this.setState({ isLoading: false });
   }
   render() {
@@ -39,9 +37,10 @@ class Posts extends Component {
               title={p.title}
               description={p.body}
               author={p.author}
-              timestamp={p.timestamp.toString()}
+              timestamp={p.timestamp}
               votes={p.voteScore}
               comments={p.commentCount}
+              deleted={p.deleted}
             />
           ))}
         </ul>

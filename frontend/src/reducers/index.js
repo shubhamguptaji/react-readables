@@ -4,8 +4,10 @@ import fetchComments from "./fetchComments";
 import fetchCategories from "./fetchCategories";
 import IDGenerator from "../helper";
 
-function posts(state = [], action) {
-  const { author, title, description, category, id } = action;
+const initialState = [];
+
+function posts(state = initialState, action) {
+  const { author, title, body, category } = action;
   switch (action.type) {
     case FETCH_POSTS:
       return [...state, ...action.payload];
@@ -15,25 +17,31 @@ function posts(state = [], action) {
         {
           author: author,
           title: title,
-          body: description,
+          body: body,
           category: category,
           id: IDGenerator(),
-          timestamp: Date.now()
+          timestamp: Date.now(),
+          voteScore: 0,
+          commentCount: 0
         }
       ];
     case EDIT_POST:
       return {
         ...state,
-        [id]: {
+        [action.id]: {
           title: title,
-          body: description
+          body: body
         }
       };
     case REMOVE_POST:
-      return [...state, state.filter(id => id !== action.id)];
+      return state;
     default:
       return state;
   }
 }
 
-export default combineReducers({ posts, fetchComments, fetchCategories });
+export default combineReducers({
+  posts,
+  fetchComments,
+  fetchCategories
+});

@@ -16,19 +16,19 @@ export const posts = () => {
   };
 };
 
-export function AddPost({ author, category, description, title }) {
+export function AddPost({ author, category, body, title }) {
   return {
-    ADD_POST,
+    type: ADD_POST,
     author,
     category,
-    description,
+    body,
     title
   };
 }
 
 export function EditPost({ author, category, description, title }) {
   return {
-    EDIT_POST,
+    type: EDIT_POST,
     author,
     category,
     description,
@@ -38,7 +38,7 @@ export function EditPost({ author, category, description, title }) {
 
 export function RemovePost({ id }) {
   return {
-    REMOVE_POST,
+    type: REMOVE_POST,
     id
   };
 }
