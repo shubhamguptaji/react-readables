@@ -1,9 +1,9 @@
 import React, { Component } from "react";
+import Posts from "./Posts";
 import Categories from "./Categories";
-import Posts from "./posts";
 import AddPostForm from "./AddPostForm";
-import { Row, Col } from "react-materialize";
 import MediaQuery from "react-responsive";
+import { Row, Col } from "react-materialize";
 
 class FrontPage extends Component {
   render() {

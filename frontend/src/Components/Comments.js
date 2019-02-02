@@ -1,15 +1,12 @@
 import React, { Component } from "react";
 import { Row, Icon, Input, Button } from "react-materialize";
-import { fetchComments, AddComment } from "../actions/fetchComments";
+import { fetchComments, voteComment, addCommentAPI } from "../actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
 class Comments extends Component {
   state = {
-    comment: "",
-    name: "",
-    parentId: "",
-    voteScore: 0
+    parentId: ""
   };
 
   componentDidMount() {
@@ -17,22 +14,21 @@ class Comments extends Component {
     this.setState({ parentId: this.props.parentId });
   }
 
-  commentChange = event => {
-    this.setState({ comment: event.target.value });
-  };
+  submit = e => {
+    e.preventDefault();
+    const name = e.target[0].value;
+    const body = e.target[1].value;
+    if (name === "" || body === "") {
+      return;
+    }
 
-  nameChange = event => {
-    this.setState({ name: event.target.value });
-  };
-
-  handleSubmit = () => {
-    this.props.addComment({
-      author: this.state.name,
-      body: this.state.comment,
+    this.props.NewComment({
+      body,
+      author: name,
       parentId: this.state.parentId
     });
-
-    this.setState({ name: "", comment: "" });
+    e.target[0].value = "";
+    e.target[1].value = "";
   };
 
   render() {
@@ -58,22 +54,24 @@ class Comments extends Component {
                   </Row>
                   <Row>
                     <Button
-                    // onClick={() =>
-                    //   this.setState({ voteScore: this.state.voteScore + 1 })
-                    // }
+                      onClick={() => {
+                        this.props.upvote(c.id);
+                      }}
                     >
                       <Icon small left>
                         thumb_up
                       </Icon>
                     </Button>
                     <Button
-                    // onClick={() =>
-                    //   this.setState({ voteScore: this.state.voteScore - 1 })
-                    // }
+                      onClick={() => {
+                        this.props.downvote(c.id);
+                      }}
                     >
                       <Icon small>thumb_down</Icon>
                     </Button>
-                    <span style={{ float: "right" }}>{c.voteScore + " votes"}</span>
+                    <span style={{ float: "right" }}>
+                      {c.voteScore + " votes"}
+                    </span>
                   </Row>
                 </Row>
               ) : (
@@ -81,19 +79,11 @@ class Comments extends Component {
               )
             )}
             <Row style={{ marginTop: 10 }}>
-              <Input
-                s={4}
-                label="name"
-                onChange={this.nameChange}
-                value={this.state.name}
-              />
-              <Input
-                s={6}
-                label="Comment"
-                onChange={this.commentChange}
-                value={this.state.comment}
-              />
-              <Button onClick={this.handleSubmit}>Post</Button>
+              <form onSubmit={this.submit}>
+                <Input s={4} label="name" />
+                <Input s={6} label="Comment" />
+                <Button>Post</Button>
+              </form>
             </Row>
           </ul>
         </div>
@@ -110,8 +100,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchComments: bindActionCreators(fetchComments, dispatch),
-    addComment: data => dispatch(AddComment(data))
+    fetchComments: id => dispatch(fetchComments(id)),
+    upvote: id => dispatch(voteComment(id, "upVote")),
+    downvote: id => dispatch(voteComment(id, "downVote")),
+    NewComment: ({ body, author, parentId }) =>
+      dispatch(addCommentAPI({ body, author, parentId }))
   };
 }
 

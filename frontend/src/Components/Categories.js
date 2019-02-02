@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Row, Col } from "react-materialize";
 import NavItem from "react-materialize/lib/NavItem";
-import { fetchCategories } from "../actions/fetchCategories";
+import { fetchCategories } from "../actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 

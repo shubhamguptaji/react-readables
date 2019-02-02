@@ -1,13 +1,23 @@
 import React, { Component } from "react";
 import Post from "./post";
 import { connect } from "react-redux";
-import { Row, Col, Preloader } from "react-materialize";
+import {
+  Row,
+  Col,
+  Preloader,
+  Card,
+  Collapsible,
+  CollapsibleItem
+} from "react-materialize";
 import { posts } from "../actions";
-import { bindActionCreators } from "redux";
+import Categories from "./Categories";
+import AddPostForm from "./AddPostForm";
+import MediaQuery from "react-responsive";
 
 class Posts extends Component {
   state = {
-    isLoading: true
+    isLoading: true,
+    category: ""
   };
   componentDidMount() {
     this.props.fetchPosts();
@@ -27,37 +37,75 @@ class Posts extends Component {
       );
     }
 
+    let count = 0;
+    const { category } = this.state;
     return (
       <div>
-        <ul>
-          {this.props.posts.map(p => (
-            <Post
-              key={p.id}
-              id={p.id}
-              title={p.title}
-              description={p.body}
-              author={p.author}
-              timestamp={p.timestamp}
-              votes={p.voteScore}
-              comments={p.commentCount}
-              deleted={p.deleted}
-            />
-          ))}
-        </ul>
+        <Row>
+          <Col m={2} s={0}>
+            <MediaQuery query="(min-width: 1000px)">
+              <div>
+                <Categories />
+              </div>
+            </MediaQuery>
+          </Col>
+          <Col s={12} m={7}>
+            <Row>
+              <Collapsible>
+                <CollapsibleItem
+                  header={<h4 style={{ textAlign: "center" }}>ADD New Post</h4>}
+                >
+                  <AddPostForm />
+                </CollapsibleItem>
+              </Collapsible>
+            </Row>
+            <Row>
+              {this.props.posts &&
+                this.props.posts.map(p => {
+                  if (
+                    p.deleted === false &&
+                    (category === p.category || category === "")
+                  ) {
+                    count++;
+                    return (
+                      <Post
+                        key={p.id}
+                        id={p.id}
+                        title={p.title}
+                        description={p.body}
+                        author={p.author}
+                        timestamp={p.timestamp}
+                        votes={p.voteScore}
+                        comments={p.commentCount}
+                        voteScore={p.voteScore}
+                      />
+                    );
+                  }
+                  return null;
+                })}
+              {count === 0 && (
+                <Row>
+                  <Card title={<h4>Sorry! No Posts Available</h4>} />
+                </Row>
+              )}
+            </Row>
+          </Col>
+          <Col s={0} m={3} />
+        </Row>
       </div>
     );
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({ posts }) {
   return {
-    posts: state.posts
+    posts: Object.keys(posts).map(key => posts[key])
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchPosts: bindActionCreators(posts, dispatch)
+    fetchPosts: () => dispatch(posts())
   };
 }
 
