@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "A server for the Udacity Reddit Clone project for ReactND",
   "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "keywords": [
     "udacity",
     "redux",
