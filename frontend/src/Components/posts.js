@@ -85,7 +85,7 @@ class Posts extends Component {
                 })}
               {count === 0 && (
                 <Row>
-                  <Card title={<h4>Sorry! No Posts Available</h4>} />
+                  <Card title="Sorry! No Posts Available" />
                 </Row>
               )}
             </Row>

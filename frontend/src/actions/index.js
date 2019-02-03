@@ -3,10 +3,11 @@ export const FETCH_COMMENTS = "FETCH_COMMENTS";
 export const ADD_POST = "ADD_POST";
 export const REMOVE_POST = "REMOVE_POST";
 export const EDIT_POST = "EDIT_POST";
-export const FETCH_POSTS = "FETCH_POSTS";
+export const EDIT_COMMENT = "EDIT_COMMENT";
 export const UP_VOTE_POST = "UP_VOTE_POST";
 export const DOWN_VOTE_POST = "DOWN_VOTE_POST";
-export const VOTE_COMMENT = "VOTE_COMMENT";
+export const UP_VOTE_COMMENT = "UP_VOTE_COMMENT";
+export const DOWN_VOTE_COMMENT = "DOWN_VOTE_COMMENT";
 export const ADD_COMMENT = "ADD_COMMENT";
 export const REMOVE_COMMENT = "REMOVE_COMMENT";
 
@@ -52,15 +53,29 @@ export const AddPostAPI = ({ author, body, title, category }) => {
   };
 };
 
-export function EditPost({ author, category, description, title }) {
+export function EditPost(post) {
   return {
     type: EDIT_POST,
-    author,
-    category,
-    description,
-    title
+    post
   };
 }
+
+export const EditPostAPI = (id, { title, body }) => {
+  return dispatch => {
+    fetch(`${url}/posts/${id}`, {
+      headers: {
+        ...headers,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        title,
+        body
+      })
+    })
+      .then(res => res.json())
+      .then(data => dispatch(EditPost(data)));
+  };
+};
 
 export function RemovePost(post) {
   return {
@@ -92,6 +107,13 @@ export const fetchCategories = () => {
   };
 };
 
+export function addComment(comment) {
+  return {
+    type: ADD_COMMENT,
+    comment
+  };
+}
+
 export const fetchComments = parentId => {
   return dispatch => {
     fetch(`${url}/posts/${parentId}/comments`, {
@@ -99,7 +121,7 @@ export const fetchComments = parentId => {
       headers
     })
       .then(response => response.json())
-      .then(data => dispatch({ type: FETCH_COMMENTS, payload: data }));
+      .then(data => data.map(d => dispatch(addComment(d))));
   };
 };
 
@@ -147,15 +169,37 @@ export const downvotePostAPI = id => {
   };
 };
 
-export function voteComment(id, option) {
+export function editComment(comment) {
   return {
-    type: VOTE_COMMENT,
-    id,
-    option
+    type: EDIT_COMMENT,
+    comment
   };
 }
 
-export const voteCommentAPI = (id, option) => {
+export const editCommentAPI = (id, { body }) => {
+  return dispatch => {
+    fetch(`${url}/comments/${id}`, {
+      headers: {
+        ...headers,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        body
+      })
+    })
+      .then(res => res.json())
+      .then(data => dispatch(editComment(data)));
+  };
+};
+
+export function upvoteComment(comment) {
+  return {
+    type: UP_VOTE_COMMENT,
+    comment
+  };
+}
+
+export const upvoteCommentAPI = id => {
   return dispatch => {
     fetch(`${url}/comments/${id}`, {
       method: "POST",
@@ -163,17 +207,34 @@ export const voteCommentAPI = (id, option) => {
         ...headers,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(option)
-    }).then(data => dispatch(voteComment(id, option)));
+      body: JSON.stringify({ option: "upVote" })
+    })
+      .then(res => res.json())
+      .then(data => dispatch(upvoteComment(data)));
   };
 };
 
-export function addComment(comment) {
+export function downvoteComment(comment) {
   return {
-    type: ADD_COMMENT,
+    type: DOWN_VOTE_COMMENT,
     comment
   };
 }
+
+export const downvoteCommentAPI = id => {
+  return dispatch => {
+    fetch(`${url}/comments/${id}`, {
+      method: "POST",
+      headers: {
+        ...headers,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ option: "downVote" })
+    })
+      .then(res => res.json())
+      .then(data => dispatch(downvoteComment(data)));
+  };
+};
 
 export const addCommentAPI = ({ parentId, body, author }) => {
   return dispatch => {
@@ -194,10 +255,10 @@ export const addCommentAPI = ({ parentId, body, author }) => {
   };
 };
 
-export function RemoveComment({ id }) {
+export function RemoveComment(comment) {
   return {
     type: REMOVE_COMMENT,
-    id
+    comment
   };
 }
 
@@ -209,6 +270,6 @@ export const RemoveCommentAPI = id => {
         ...headers,
         "Content-Type": "application/json"
       }
-    }).then(data => dispatch(RemoveComment(id)));
+    }).then(data => dispatch(RemoveComment(data)));
   };
 };

@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 import { Row, Icon, Input, Button } from "react-materialize";
-import { fetchComments, voteComment, addCommentAPI } from "../actions";
+import {
+  fetchComments,
+  addCommentAPI,
+  upvoteCommentAPI,
+  downvoteCommentAPI
+} from "../actions";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 
 class Comments extends Component {
   state = {
@@ -37,13 +41,11 @@ class Comments extends Component {
         <div>
           <ul>
             {this.props.comment.map(c =>
-              c.parentId === this.props.parentId ? (
+              c.parentId === this.props.parentId && c.deleted === false ? (
                 <Row key={c.id}>
                   <Row>
                     <span style={{ float: "right" }}>
-                      {Date(c.timestamp)
-                        .toString()
-                        .slice(3, 15)}
+                      {new Date(c.timestamp).toString().slice(0, 15)}
                     </span>
                     <Icon left mini>
                       person_pin
@@ -78,6 +80,7 @@ class Comments extends Component {
                 <span />
               )
             )}
+            {}
             <Row style={{ marginTop: 10 }}>
               <form onSubmit={this.submit}>
                 <Input s={4} label="name" />
@@ -92,17 +95,17 @@ class Comments extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({ fetchComments }) {
   return {
-    comment: state.fetchComments
+    comment: Object.keys(fetchComments).map(key => fetchComments[key])
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     fetchComments: id => dispatch(fetchComments(id)),
-    upvote: id => dispatch(voteComment(id, "upVote")),
-    downvote: id => dispatch(voteComment(id, "downVote")),
+    upvote: id => dispatch(upvoteCommentAPI(id)),
+    downvote: id => dispatch(downvoteCommentAPI(id)),
     NewComment: ({ body, author, parentId }) =>
       dispatch(addCommentAPI({ body, author, parentId }))
   };

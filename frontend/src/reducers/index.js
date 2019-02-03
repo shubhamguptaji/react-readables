@@ -2,14 +2,14 @@ import {
   ADD_POST,
   EDIT_POST,
   REMOVE_POST,
-  // FETCH_POSTS,
   FETCH_CATEGORIES,
-  FETCH_COMMENTS,
   UP_VOTE_POST,
   DOWN_VOTE_POST,
-  VOTE_COMMENT,
   ADD_COMMENT,
-  REMOVE_COMMENT
+  REMOVE_COMMENT,
+  UP_VOTE_COMMENT,
+  DOWN_VOTE_COMMENT,
+  EDIT_COMMENT
 } from "../actions";
 import { combineReducers } from "redux";
 
@@ -68,38 +68,45 @@ function fetchCategories(state = [], action) {
 }
 
 function fetchComments(state = {}, action) {
-  const { id, author, timestamp, parentId, body } = action;
+  const { comment } = action;
   switch (action.type) {
-    case FETCH_COMMENTS:
+    case ADD_COMMENT:
       return {
         ...state,
-        ...action.payload
+        [comment.id]: comment
       };
-    case ADD_COMMENT:
-      state.push({
-        author,
-        id,
-        timestamp,
-        parentId,
-        body
-      });
-      return state;
+    case EDIT_COMMENT:
+      return {
+        ...state,
+        [comment.id]: {
+          ...state[comment.id],
+          body: [comment.id].body
+        }
+      };
     case REMOVE_COMMENT:
-      let newState = [];
-      for (let i = 0; i < state.length; i++) {
-        if (state[i].id !== action.id) newState.push(state[i]);
-      }
-      return newState;
-    case VOTE_COMMENT:
-      let nState = [];
-      for (let j = 0; j < state.length; j++) {
-        if (state[j].id === action.id && action.option === "upVote")
-          state[j].voteScore = state[j].voteScore + 1;
-        if (state[j].id === action.id && action.option === "downVote")
-          state[j].voteScore = state[j].voteScore - 1;
-        nState.push(state[j]);
-      }
-      return nState;
+      return {
+        ...state,
+        [comment.id]: {
+          ...state[comment.id],
+          deleted: true
+        }
+      };
+    case UP_VOTE_COMMENT:
+      return {
+        ...state,
+        [comment.id]: {
+          ...state[comment.id],
+          voteScore: state[comment.id].voteScore + 1
+        }
+      };
+    case DOWN_VOTE_COMMENT:
+      return {
+        ...state,
+        [comment.id]: {
+          ...state[comment.id],
+          voteScore: state[comment.id].voteScore - 1
+        }
+      };
     default:
       return state;
   }

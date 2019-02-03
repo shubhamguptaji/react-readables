@@ -6,7 +6,8 @@ import {
   Dropdown,
   NavItem,
   Collapsible,
-  Button
+  Button,
+  Modal
 } from "react-materialize";
 import Comments from "./Comments";
 import CollapsibleItem from "react-materialize/lib/CollapsibleItem";
@@ -15,7 +16,7 @@ import { connect } from "react-redux";
 
 class Post extends Component {
   state = {
-    voteScore: this.props.votes
+    isModalOpen: false
   };
 
   delete = id => {
@@ -40,6 +41,7 @@ class Post extends Component {
       id,
       voteScore
     } = this.props;
+
     return (
       <div>
         <Card>
@@ -59,12 +61,15 @@ class Post extends Component {
                   </a>
                 }
               >
-                <div style={{ padding: 8 }}>
+                <NavItem
+                  style={{ padding: 8 }}
+                  onClick={() => this.setState({ isModalOpen: true })}
+                >
                   <Icon tiny left>
                     edit
                   </Icon>
                   Edit
-                </div>
+                </NavItem>
                 <NavItem divider />
                 <NavItem style={{ padding: 8 }} onClick={() => this.delete(id)}>
                   <Icon tiny left>
@@ -75,12 +80,15 @@ class Post extends Component {
               </Dropdown>
             </span>
             <span style={{ float: "right" }}>
-              {Date(timestamp * 1000)
-                .toString()
-                .slice(3, 15)}
+              {new Date(timestamp).toString().slice(0, 15)}
             </span>
           </Row>
           <Row />
+          {this.state.isModalOpen === true ? (
+            <Modal header="hello">hello</Modal>
+          ) : (
+            <div />
+          )}
           <Collapsible>
             <CollapsibleItem
               header={
