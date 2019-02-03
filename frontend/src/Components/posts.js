@@ -9,20 +9,28 @@ import {
   Collapsible,
   CollapsibleItem
 } from "react-materialize";
-import { posts } from "../actions";
-import Categories from "./Categories";
+import { posts, fetchCategories } from "../actions";
 import AddPostForm from "./AddPostForm";
 import MediaQuery from "react-responsive";
+import Input from "react-materialize/lib/Input";
 
 class Posts extends Component {
   state = {
     isLoading: true,
     category: ""
   };
+
   componentDidMount() {
     this.props.fetchPosts();
+    this.props.fetchCategories();
     this.setState({ isLoading: false });
   }
+
+  submit = e => {
+    e.preventDefault();
+    this.setState({ category: e.target.value });
+  };
+
   render() {
     const { isLoading } = this.state;
     if (isLoading) {
@@ -37,16 +45,33 @@ class Posts extends Component {
       );
     }
 
+    if (this.state.category !== "")
+      this.props.posts.filter(post => post.category === this.state.category);
+
     let count = 0;
     const { category } = this.state;
     return (
       <div>
         <Row>
-          <Col m={2} s={0}>
+          <Col m={3} s={0}>
             <MediaQuery query="(min-width: 1000px)">
-              <div>
-                <Categories />
-              </div>
+              <Row style={{ marginTop: 200 }}>
+                <Input
+                  type="select"
+                  s={12}
+                  label="Sort By Category"
+                  onChange={this.submit}
+                >
+                  <option key="all" value="">
+                    All
+                  </option>
+                  {this.props.categories.map(c => (
+                    <option key={c.name} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))}
+                </Input>
+              </Row>
             </MediaQuery>
           </Col>
           <Col s={12} m={7}>
@@ -58,6 +83,27 @@ class Posts extends Component {
                   <AddPostForm />
                 </CollapsibleItem>
               </Collapsible>
+            </Row>
+            <Row>
+              <MediaQuery query="(max-width: 600px)">
+                <Row>
+                  <Input
+                    type="select"
+                    s={12}
+                    label="Sort By Category"
+                    onChange={this.submit}
+                  >
+                    <option key="all" value="">
+                      All
+                    </option>
+                    {this.props.categories.map(c => (
+                      <option key={c.name} value={c.name}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Input>
+                </Row>
+              </MediaQuery>
             </Row>
             <Row>
               {this.props.posts &&
@@ -90,22 +136,24 @@ class Posts extends Component {
               )}
             </Row>
           </Col>
-          <Col s={0} m={3} />
+          <Col s={0} m={2} />
         </Row>
       </div>
     );
   }
 }
 
-function mapStateToProps({ posts }) {
+function mapStateToProps({ posts, fetchCategories }) {
   return {
-    posts: Object.keys(posts).map(key => posts[key])
+    posts: Object.keys(posts).map(key => posts[key]),
+    categories: fetchCategories
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchPosts: () => dispatch(posts())
+    fetchPosts: () => dispatch(posts()),
+    fetchCategories: () => dispatch(fetchCategories())
   };
 }
 

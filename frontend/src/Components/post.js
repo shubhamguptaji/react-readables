@@ -6,13 +6,13 @@ import {
   Dropdown,
   NavItem,
   Collapsible,
-  Button,
-  Modal
+  Button
 } from "react-materialize";
 import Comments from "./Comments";
 import CollapsibleItem from "react-materialize/lib/CollapsibleItem";
 import { RemovePostAPI, upvotePostAPI, downvotePostAPI } from "../actions";
 import { connect } from "react-redux";
+import Col from "react-materialize/lib/Col";
 
 class Post extends Component {
   state = {
@@ -46,12 +46,18 @@ class Post extends Component {
       <div>
         <Card>
           <Row>
-            <Icon small left>
-              account_circle
-            </Icon>
-            <strong>{author}</strong> added a post.
-            <span />
-            <span style={{ float: "right" }}>
+            <Col s={8} m={8}>
+              <Icon small left>
+                account_circle
+              </Icon>
+              <strong>{author}</strong> added a post.
+            </Col>
+            <Col s={3} m={3}>
+              <span style={{ float: "right" }}>
+                {new Date(timestamp).toString().slice(0, 15)}
+              </span>
+            </Col>
+            <Col s={1} m={1} style={{ float: "right" }}>
               <Dropdown
                 trigger={
                   <a href="/">
@@ -61,15 +67,12 @@ class Post extends Component {
                   </a>
                 }
               >
-                <NavItem
-                  style={{ padding: 8 }}
-                  onClick={() => this.setState({ isModalOpen: true })}
-                >
+                {/* <NavItem style={{ padding: 8 }}>
                   <Icon tiny left>
                     edit
                   </Icon>
                   Edit
-                </NavItem>
+                </NavItem> */}
                 <NavItem divider />
                 <NavItem style={{ padding: 8 }} onClick={() => this.delete(id)}>
                   <Icon tiny left>
@@ -78,17 +81,9 @@ class Post extends Component {
                   Delete
                 </NavItem>
               </Dropdown>
-            </span>
-            <span style={{ float: "right" }}>
-              {new Date(timestamp).toString().slice(0, 15)}
-            </span>
+            </Col>
           </Row>
           <Row />
-          {this.state.isModalOpen === true ? (
-            <Modal header="hello">hello</Modal>
-          ) : (
-            <div />
-          )}
           <Collapsible>
             <CollapsibleItem
               header={
@@ -98,15 +93,20 @@ class Post extends Component {
                     {description}
                   </Row>
                   <Row style={{ padding: 10 }}>
-                    <span style={{ float: "right" }}>
-                      {comments + " comments"}
-                      <Icon small right>
-                        mode_comment
-                      </Icon>
-                    </span>
-                    <span style={{ float: "left" }}>
-                      {voteScore + " votes"}
-                    </span>
+                    <Col s={6}>
+                      <strong style={{ float: "left" }}>
+                        {voteScore + " votes"}
+                      </strong>
+                    </Col>
+                    <Col s={3} />
+                    <Col s={3}>
+                      <strong style={{ float: "right" }}>
+                        {comments + " comments"}
+                        <Icon small right>
+                          mode_comment
+                        </Icon>
+                      </strong>
+                    </Col>
                   </Row>
                 </div>
               }
