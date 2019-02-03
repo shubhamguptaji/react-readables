@@ -86,7 +86,7 @@ class Posts extends Component {
             </Row>
             <Row>
               <MediaQuery query="(max-width: 600px)">
-                <Row>
+                <Row style={{ marginTop: 20, marginBottom: 20 }}>
                   <Input
                     type="select"
                     s={12}

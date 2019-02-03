@@ -93,13 +93,13 @@ class Post extends Component {
                     {description}
                   </Row>
                   <Row style={{ padding: 10 }}>
-                    <Col s={6}>
+                    <Col s={4} m={3}>
                       <strong style={{ float: "left" }}>
                         {voteScore + " votes"}
                       </strong>
                     </Col>
-                    <Col s={3} />
-                    <Col s={3}>
+                    <Col s={0} m={6}/>
+                    <Col s={8} m={3}>
                       <strong style={{ float: "right" }}>
                         {comments + " comments"}
                         <Icon small right>

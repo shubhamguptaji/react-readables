@@ -42,23 +42,23 @@ class Comments extends Component {
   };
 
   render() {
+    this.props.comment.filter(comment => comment.deleted === false);
     return (
       <div>
         <div>
           <ul>
             {this.props.comment.map(c =>
-              c.parentId === this.props.parentId && c.deleted === false ? (
+              c.parentId === this.props.parentId ? (
                 <Row key={c.id}>
                   <Row>
-                    <Col s={7} m={7}>
+                    <Col s={6} m={7}>
                       <Icon left mini>
                         person_pin
                       </Icon>
                       <strong>{c.author}</strong>
                       {" commented "}
-                      <strong>{c.body}</strong>
                     </Col>
-                    <Col s={4} m={4}>
+                    <Col s={5} m={4}>
                       <span style={{ float: "right" }}>
                         {new Date(c.timestamp).toString().slice(0, 15)}
                       </span>
@@ -75,7 +75,7 @@ class Comments extends Component {
                       >
                         {/* <NavItem style={{ padding: 8 }}>
                   <Icon tiny left>
-                    edit
+                  edit
                   </Icon>
                   Edit
                 </NavItem> */}
@@ -92,6 +92,10 @@ class Comments extends Component {
                       </Dropdown>
                     </Col>
                   </Row>
+                  <Row>
+                    <strong>{c.body}</strong>
+                  </Row>
+
                   <Row>
                     <Col s={8}>
                       <Button

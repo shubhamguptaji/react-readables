@@ -12,7 +12,7 @@ export const ADD_COMMENT = "ADD_COMMENT";
 export const REMOVE_COMMENT = "REMOVE_COMMENT";
 
 const headers = { Authorization: "helloworld" };
-const url = "http://localhost:3001";
+const url = "https://readables-react.herokuapp.com";
 const uuidv4 = require("uuid/v4");
 
 export const posts = () => {
